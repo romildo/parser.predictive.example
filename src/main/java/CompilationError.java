@@ -5,7 +5,7 @@ public class CompilationError extends RuntimeException {
    }
 
    public CompilationError(String format, Object... args) {
-      this(String.format(format, args));                      ''
+      this(String.format(format, args));
    }
 
    public CompilationError(int line, int col, String format, Object... args) {
