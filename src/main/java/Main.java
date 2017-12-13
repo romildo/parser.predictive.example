@@ -16,17 +16,22 @@ public class Main {
       }
 
       Lexer lex = new Lexer(input);
-      Parser p = new MyParser(lex);
+      MyParser p = new MyParser(lex);
 
-      p.parse();
+      Double resposta = p.parse();
+      System.out.printf("Valor: %f%n", resposta);
    }
 
    public static void main(String[] args) {
       try {
          run(args);
       }
+      catch (CompilationError e) {
+         System.err.printf("compilation error:%n  %s%n", e.getMessage());
+         System.exit(3);
+      }
       catch (FileNotFoundException e) {
-         System.err.printf("file not found: %s\n", args[0]);
+         System.err.printf("file not found: %s%n", args[0]);
          System.exit(1);
       }
       catch (IOException e) {

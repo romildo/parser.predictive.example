@@ -1,5 +1,3 @@
-/* -*-Mode: java-*- */
-
 %%
 
 %public
@@ -18,8 +16,11 @@
         return tok(typ, null);
     }
     
-    private void error(String msg) {
-    	ErrorMsg.error(yyline, yycolumn, "lexical error", msg);
+    private CompilationError error(String format, Object... args) {
+    	return CompilationError.error(
+    	           yyline, yycolumn,
+    	           "lexical error: %s",
+    	           String.format(format, args));
     }
 %}
 
@@ -28,27 +29,16 @@
 [ \t\f\n\r]+          { /* skip white spaces */ }
 "#" .*                { /* skip comment */ }
 
-"if"                  { return tok(Token.T.IF); }
-"then"                { return tok(Token.T.THEN); }
-"else"                { return tok(Token.T.ELSE); }
-"while"               { return tok(Token.T.WHILE); }
-"do"                  { return tok(Token.T.DO); }
-
 "("                   { return tok(Token.T.LPAREN); }
 ")"                   { return tok(Token.T.RPAREN); }
-"{"                   { return tok(Token.T.LBRACE); }
-"}"                   { return tok(Token.T.RBRACE); }
-";"                   { return tok(Token.T.SEMI); }
 
-":="                  { return tok(Token.T.ASSIGN); }
-"=="                  { return tok(Token.T.EQ); }
 "+"                   { return tok(Token.T.PLUS); }
-"*"                   { return tok(Token.T.MINUS); }
+"-"                   { return tok(Token.T.MINUS); }
+"*"                   { return tok(Token.T.TIMES); }
+"/"                   { return tok(Token.T.DIV); }
 
-[0-9]+                { return tok(Token.T.NUM, new Long(yytext())); }
-                        
-[a-zA-Z][a-zA-Z0-9_]+ { return tok(Token.T.ID, yytext()); }
+[0-9]+ ("." [0-9]+)?  { return tok(Token.T.NUM, new Double(yytext())); }
                         
 <<EOF>>               { return tok(Token.T.EOF); }
 
-.                     { error("illegal character: " + yytext()); }
+.                     { throw error("illegal character: [%s]", yytext()); }

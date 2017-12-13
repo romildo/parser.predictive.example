@@ -9,15 +9,17 @@ public abstract class Parser<T> {
       this.tok = lex.getToken();
    }
 
-   protected void error(Token.T[] expected) {
+   protected CompilationError error(Token.T[] expected) {
       StringBuilder b = new StringBuilder();
       if (expected.length > 0) {
          b.append(expected[0]);
          for (int i = 1; i < expected.length; i++)
             b.append(", ").append(expected[i]);
       }
-      ErrorMsg.error(tok.line, tok.col, "syntax error", "expecting " + b.toString() + ", found " + tok.type);
-      System.exit(3);
+      return CompilationError.error(
+         tok.line, tok.col,
+         "syntax error: expecting %s, found %s",
+         b.toString(), tok.type);
    }
 
    protected void advance() throws IOException {
@@ -28,7 +30,7 @@ public abstract class Parser<T> {
       if (tok.type == t)
          advance();
       else
-         error(new Token.T[]{t});
+         throw error(new Token.T[]{t});
    }
 
    public abstract T parse() throws IOException;

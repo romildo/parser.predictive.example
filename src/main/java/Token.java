@@ -2,10 +2,9 @@ import java.util.Formatter;
 
 public class Token {
    public enum T {
-      IF, THEN, ELSE, WHILE, DO,
-      LPAREN, RPAREN, LBRACE, RBRACE, SEMI,
-      ASSIGN, EQ, PLUS, MINUS, TIMES, DIV,
-      NUM, ID,
+      LPAREN, RPAREN,
+      PLUS, MINUS, TIMES, DIV,
+      NUM,
       EOF
    }
 
